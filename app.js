@@ -5,10 +5,7 @@ var app = module.exports = express.createServer();
 // Johnny-five setup
 var five = require("johnny-five");
 var board = new five.Board();
-var servo = new five.Servo({
-    pin: 9,
-    type: "continuous"
-});
+var servo;
 
 // Twit setup
 var Twit = require('twit');
@@ -58,6 +55,11 @@ app.get('/api/dispense', function(req, res) {
 // Initialization
 console.log("Connecting to Arduino");
 board.on("ready", function() {
+    servo = new five.Servo({
+        pin: 9,
+        type: "continuous"
+    });
+
     app.listen(process.env.PORT || 3000);
     console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
 });
