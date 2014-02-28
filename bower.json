@@ -1,0 +1,17 @@
+{
+  "name": "ToiletPaper",
+  "version": "0.0.0",
+  "authors": [
+    "Zachary Liu <liu.zachary@gmail.com>"
+  ],
+  "main": "app.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
