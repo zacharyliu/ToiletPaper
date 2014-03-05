@@ -5,16 +5,13 @@ var app = module.exports = express.createServer();
 // Johnny-five setup
 var five = require("johnny-five");
 var board = new five.Board();
-var servo;
 
-// Twit setup
-var Twit = require('twit');
-var T = new Twit({
-    consumer_key: 'XNICKgCt3HTc5qjLCaVw',
-    consumer_secret: 'dbzZdj35SV0lHSVVIuf6tb8WdeHy2Y1Z1D4mkJLys',
-    access_token: '2343732187-prlOnbKIBqHRoSXNRIw5F9ZtVarJkpfXXK8UKOC',
-    access_token_secret: 'l3qS4ryEWsz8zxPH78aBotoGBgDony2pv8aE8aGSEiWXt'
-});
+var servos = require("./servos");
+servos.init(board);
+
+var T = require("./twitter");
+
+var indicators = require("./indicators");
 
 // Configuration
 app.configure(function(){
@@ -34,32 +31,21 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-// Functions
-function dispense() {
-    servo.cw(1);
-    setTimeout(function() {
-        servo.stop();
-    }, 2000);
-}
-
 // Routes
 app.get('/', function(req, res){
     res.render('index', { title: 'Express' })
 });
 
 app.get('/api/dispense', function(req, res) {
-    dispense();
-    res.send();
+    servos.dispense(function(err) {
+        if (!err) res.send();
+    });
 });
 
 // Initialization
-console.log("Connecting to Arduino");
+console.log("app.js", "Connecting to Arduino");
 board.on("ready", function() {
-    servo = new five.Servo({
-        pin: 9,
-        type: "continuous"
-    });
-
+    console.log("app.js", "Arduino connected");
     app.listen(process.env.PORT || 3000);
-    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
+    console.log("app.js", "Express server listening on port %d in %s mode", app.address().port, app.settings.env)
 });
