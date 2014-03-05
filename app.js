@@ -47,5 +47,5 @@ console.log("app.js", "Connecting to Arduino");
 board.on("ready", function() {
     console.log("app.js", "Arduino connected");
     app.listen(process.env.PORT || 3000);
-    console.log("app.js", "Express server listening on port %d in %s mode", app.address().port, app.settings.env)
+    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
 });
