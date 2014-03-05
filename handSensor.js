@@ -12,8 +12,8 @@ HandSensor.prototype.init = function(board) {
     board.on('ready', function() {
         that.infraredEmitter = new five.Pin(config.pins.infraredEmitter);
         that.infraredDetector = new five.Pin(config.pins.infraredDetector);
-
-//        that.loop();
+        console.log('begin');
+        that.loop();
     });
 };
 
@@ -22,23 +22,26 @@ HandSensor.prototype.loop = function() {
     async.series([
         function(callback) {
             that.infraredEmitter.high();
-            that.infraredDetector.query(function(value) {
+            that.infraredDetector.read(function(value) {
                 callback(null, value);
             });
         },
         function(callback) {
             that.infraredEmitter.low();
-            that.infraredDetector.query(function(value) {
+            that.infraredDetector.read(function(value) {
                 callback(null, value);
             });
         },
     ], function(err, results) {
         var diff = results[0] - results[1];
+//        console.log(Date.now());
         if (diff > config.handSensorThreshold) {
             that.emit('handOver');
         }
     });
-    setTimeout(this.loop, 200);
+//    setTimeout(function() {
+//        that.loop();
+//    }, 1000);
 };
 
 module.exports = new HandSensor();

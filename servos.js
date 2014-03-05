@@ -18,21 +18,12 @@ ServoDispense.prototype.stop = function() {
 
 ServoCut = function(servo, reversed) {
     this.servo = servo;
-    this.reversed = reversed || false;
 };
 ServoCut.prototype.up = function() {
-    if (this.reversed) {
-        this.servo.max();
-    } else {
-        this.servo.min();
-    }
+    this.servo.max();
 };
 ServoCut.prototype.down = function() {
-    if (this.reversed) {
-        this.servo.min();
-    } else {
-        this.servo.max();
-    }
+    this.servo.min();
 };
 
 var isDispensing = false;
@@ -77,13 +68,22 @@ exports.init = function(board) {
         servoDispense.stop();
 
         servoCutLeft = new ServoCut(new five.Servo({
-            pin: config.pins.servoCutLeft
+            pin: config.pins.servoCutLeft,
+            range: [10,170],
+            isInverted: true
         }));
         servoCutLeft.down();
 
         servoCutRight = new ServoCut(new five.Servo({
-            pin: config.pins.servoCutRight
-        }), true);
+            pin: config.pins.servoCutRight,
+            range: [10,170]
+        }));
         servoCutRight.down();
+
+        board.repl.inject({
+            servoDispense: servoDispense,
+            servoCutLeft: servoCutLeft,
+            servoCutRight: servoCutRight
+        });
     });
 };

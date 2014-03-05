@@ -13,7 +13,7 @@ var indicators = require("./indicators");
 indicators.init(board);
 
 var paperLevelSensor = require("./paperLevelSensor");
-paperLevelSensor.init(board);
+//paperLevelSensor.init(board);
 
 var handSensor = require('./handSensor');
 handSensor.init(board);
@@ -38,7 +38,7 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-// Routes
+// Express routes
 app.get('/', function(req, res){
     res.render('index', { title: 'Express' })
 });
@@ -58,7 +58,10 @@ board.on("ready", function() {
 
     // Event routing
     handSensor.on('handOver', function() {
-        servos.dispense(function() {});
+        console.log('app.js', 'Event (handSensor): handOver');
+        servos.dispense(function(err) {
+
+        });
     });
 
     paperLevelSensor.on('paperLow', function() {
