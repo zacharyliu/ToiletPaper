@@ -1,4 +1,5 @@
 var five = require("johnny-five");
+var config = require('./config');
 
 var servoDispense, servoCutLeft, servoCutRight;
 
@@ -70,18 +71,18 @@ exports.cut = function(done) {
 exports.init = function(board) {
     board.on("ready", function() {
         servoDispense = new ServoDispense(new five.Servo({
-            pin: 9,
+            pin: config.pins.servoDispense,
             type: "continuous"
         }));
         servoDispense.stop();
 
         servoCutLeft = new ServoCut(new five.Servo({
-            pin: 10
+            pin: config.pins.servoCutLeft
         }));
         servoCutLeft.down();
 
         servoCutRight = new ServoCut(new five.Servo({
-            pin: 10
+            pin: config.pins.servoCutRight
         }), true);
         servoCutRight.down();
     });

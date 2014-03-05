@@ -9,9 +9,16 @@ var board = new five.Board();
 var servos = require("./servos");
 servos.init(board);
 
-var T = require("./twitter");
-
 var indicators = require("./indicators");
+indicators.init(board);
+
+var paperLevelSensor = require("./paperLevelSensor");
+paperLevelSensor.init(board);
+
+var handSensor = require('./handSensor');
+handSensor.init(board);
+
+var T = require("./twitter");
 
 // Configuration
 app.configure(function(){
@@ -47,5 +54,17 @@ console.log("app.js", "Connecting to Arduino");
 board.on("ready", function() {
     console.log("app.js", "Arduino connected");
     app.listen(process.env.PORT || 3000);
-    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
+    console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+    // Event routing
+    handSensor.on('handOver', function() {
+        servos.dispense(function() {});
+    });
+
+    paperLevelSensor.on('paperLow', function() {
+        console.log('Paper Low!');
+        T.post('statuses/update', {status: 'Paper Low!'}, function(err, reply) {
+
+        });
+    })
 });
