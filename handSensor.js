@@ -4,7 +4,9 @@ var events = require('events');
 var config = require('./config');
 var async = require('async');
 
-var HandSensor = function() {};
+var HandSensor = function() {
+    this.handOver = false;
+};
 util.inherits(HandSensor, events.EventEmitter);
 
 HandSensor.prototype.init = function(board) {
@@ -22,26 +24,32 @@ HandSensor.prototype.loop = function() {
     async.series([
         function(callback) {
             that.infraredEmitter.high();
-            that.infraredDetector.read(function(value) {
-                callback(null, value);
+            that.infraredDetector.query(function(state) {
+                callback(null, that.infraredDetector.value);
             });
         },
         function(callback) {
+            setTimeout(callback, 50);
+        },
+        function(callback) {
             that.infraredEmitter.low();
-            that.infraredDetector.read(function(value) {
-                callback(null, value);
+            that.infraredDetector.query(function(state) {
+                callback(null, that.infraredDetector.value);
             });
         },
     ], function(err, results) {
-        var diff = results[0] - results[1];
-//        console.log(Date.now());
-        if (diff > config.handSensorThreshold) {
+        var diff = results[2] - results[0];
+        if (diff >= config.handSensorThreshold && !that.handOver) {
+            that.handOver = true;
             that.emit('handOver');
+        } else if (diff < config.handSensorThreshold && that.handOver) {
+            that.handOver = false;
+            that.emit('handOut');
         }
     });
-//    setTimeout(function() {
-//        that.loop();
-//    }, 1000);
+    setTimeout(function() {
+        that.loop();
+    }, 100);
 };
 
 module.exports = new HandSensor();
