@@ -7,6 +7,6 @@ module.exports = {
         servoCutLeft: 10,
         servoCutRight: 11
     },
-    paperLowDistanceCm: 5,
+    paperLowDistanceCm: 8,
     handSensorThreshold: 8
 };

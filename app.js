@@ -13,12 +13,12 @@ var indicators = require("./indicators");
 indicators.init(board);
 
 var paperLevelSensor = require("./paperLevelSensor");
-//paperLevelSensor.init(board);
+paperLevelSensor.init(board);
 
 var handSensor = require('./handSensor');
 handSensor.init(board);
 
-var T = require("./twitter");
+var twitter = require("./twitter");
 
 // Configuration
 app.configure(function(){
@@ -49,6 +49,8 @@ app.get('/api/dispense', function(req, res) {
     });
 });
 
+var paperLow = false;
+
 // Initialization
 console.log("app.js", "Connecting to Arduino");
 board.on("ready", function() {
@@ -65,9 +67,12 @@ board.on("ready", function() {
     });
 
     paperLevelSensor.on('paperLow', function() {
-        console.log('Paper Low!');
-        T.post('statuses/update', {status: 'Paper Low!'}, function(err, reply) {
-
-        });
+        if (!paperLow) {
+            paperLow = true;
+            console.log('Paper Low!');
+            twitter.paperLow(function(err, reply) {
+                console.log(err, reply);
+            });
+        }
     })
 });

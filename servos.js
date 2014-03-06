@@ -24,6 +24,7 @@ ServoCut.prototype.up = function() {
 };
 ServoCut.prototype.down = function() {
     this.servo.min();
+    this.servo.stop();
 };
 
 var isDispensing = false;
