@@ -20,6 +20,9 @@ handSensor.init(board);
 
 var twitter = require("./twitter");
 
+var doge = require('./doge')()
+
+
 // Configuration
 app.configure(function(){
   app.set('views', __dirname + '/views');
