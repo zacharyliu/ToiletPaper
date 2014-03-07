@@ -8,7 +8,7 @@ var Coins = function() {
     var that = this;
     this.client = new zerorpc.Client();
     this.client.connect(config.zerorpc.CameraCoins);
-    this.client.invoke('onCoin', function(err, res, more) {
+    this.client.invoke('subscribe', function(err, res, more) {
         that._onCoin(res);
     });
 };
