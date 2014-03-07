@@ -65,11 +65,11 @@ exports.dispense = function(done) {
     isDispensing = true;
     servoDispense.forward();
 
-    setTimeout(function() {
-        exports.stopAndCut(function() {
-            done();
-        });
-    }, 2000);
+//    setTimeout(function() {
+//        exports.stopAndCut(function() {
+//            done();
+//        });
+//    }, 2000);
 };
 
 exports.stopAndCut = function(done) {
@@ -114,7 +114,10 @@ exports.cut = function(callback) {
 var client;
 
 var _onLine = function(res) {
+    console.log(res);
+    exports.stopAndCut(function() {
 
+    });
 };
 
 exports.init = function(board) {
