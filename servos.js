@@ -1,5 +1,6 @@
 var five = require("johnny-five");
 var config = require('./config');
+var async = require('async');
 
 var servoDispense, servoCutLeft, servoCutRight;
 
@@ -40,24 +41,41 @@ exports.dispense = function(done) {
     setTimeout(function() {
         servoDispense.stop();
         isDispensing = false;
-        done(false);
+
+        exports.cut(function() {
+            done(false);
+        });
     }, 2000);
 };
 
-exports.cut = function(done) {
-    if (!servoCutLeft || !servoCutRight || isDispensing || isCutting) done(true);
+exports.cut = function(callback) {
+    if (!servoCutLeft || !servoCutRight || isDispensing || isCutting) callback(true);
 
     console.log("servos.js", "Cut");
     isCutting = true;
-    servoCutLeft.up();
-    servoCutRight.up();
 
-    setTimeout(function() {
-        servoCutLeft.down();
-        servoCutRight.down();
-        isCutting = false;
-        done(false);
-    }, 1000);
+    async.series([
+        function(done) {
+            servoCutLeft.up();
+            servoCutRight.up();
+            setTimeout(done, 500);
+        },
+        function(done) {
+            servoDispense.reverse();
+            setTimeout(done, 700);
+        },
+        function(done) {
+            servoDispense.stop();
+            done();
+        },
+        function(done) {
+            servoCutLeft.down();
+            servoCutRight.down();
+            isCutting = false;
+            callback(null);
+            done();
+        }
+    ]);
 };
 
 exports.init = function(board) {
@@ -70,14 +88,14 @@ exports.init = function(board) {
 
         servoCutLeft = new ServoCut(new five.Servo({
             pin: config.pins.servoCutLeft,
-            range: [10,170],
+            range: [60,140],
             isInverted: true
         }));
         servoCutLeft.down();
 
         servoCutRight = new ServoCut(new five.Servo({
             pin: config.pins.servoCutRight,
-            range: [10,170]
+            range: [60,140]
         }));
         servoCutRight.down();
 
