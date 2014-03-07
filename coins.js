@@ -20,7 +20,7 @@ Coins.prototype.init = function(board) {
     board.on('ready', function() {
         that.servo = new five.Servo({
             pin: config.pins.servoCoins,
-            range: [0,90]
+            range: [100, 180]
         });
     });
     board.repl.inject({
