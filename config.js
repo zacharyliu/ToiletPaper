@@ -5,7 +5,15 @@ module.exports = {
         infraredDetector: "A0",
         servoDispense: 9,
         servoCutLeft: 10,
-        servoCutRight: 11
+        servoCutRight: 11,
+        servoCoins: 12
+    },
+    cameras: {
+        coin: 2
+    },
+    zerorpc: {
+        CameraCoins: 'tcp://127.0.0.1:4242',
+        CameraLines: 'tcp://127.0.0.1:4243'
     },
     paperLowDistanceCm: 8,
     handSensorThreshold: 8
