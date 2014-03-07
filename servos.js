@@ -88,14 +88,14 @@ exports.init = function(board) {
 
         servoCutLeft = new ServoCut(new five.Servo({
             pin: config.pins.servoCutLeft,
-            range: [60,140],
+            range: [80,180], // 180
             isInverted: true
         }));
         servoCutLeft.down();
 
         servoCutRight = new ServoCut(new five.Servo({
             pin: config.pins.servoCutRight,
-            range: [60,140]
+            range: [50,150] // 50
         }));
         servoCutRight.down();
 
