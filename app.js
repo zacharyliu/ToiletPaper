@@ -20,8 +20,10 @@ handSensor.init(board);
 
 var twitter = require("./twitter");
 
-var doge = require('./doge')()
+var doge = require('./doge');
 
+var coins = require('./coins');
+coins.init(board);
 
 // Configuration
 app.configure(function(){
