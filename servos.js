@@ -6,15 +6,41 @@ var servoDispense, servoCutLeft, servoCutRight;
 
 ServoDispense = function(servo) {
     this.servo = servo;
+    this.forwards = false;
+    this.stopped = true;
 };
 ServoDispense.prototype.forward = function() {
-    this.servo.cw(1);
+    var that = this;
+    this.forwards = true;
+    this.stopped = false;
+    async.whilst(function(){return that.forwards}, function(done) {
+        async.series([
+            function(done) {
+                that.servo.cw(1);
+                setTimeout(done, 100);
+            },
+            function(done) {
+                that.servo.stop();
+                setTimeout(done, 200);
+            }
+        ], done);
+    }, function() {
+        that.stopped = true;
+    });
 };
 ServoDispense.prototype.reverse = function() {
-    this.servo.ccw(1);
+    var that = this;
+    this.stop(function() {
+        that.servo.ccw(1);
+    });
 };
-ServoDispense.prototype.stop = function() {
-    this.servo.stop();
+ServoDispense.prototype.stop = function(callback) {
+    this.forwards = false;
+    async.until(function(){return this.stopped}, function(done) {
+        setTimeout(done, 100);
+    }, function() {
+        if (callback) callback();
+    });
 };
 
 ServoCut = function(servo, reversed) {
