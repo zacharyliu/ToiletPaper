@@ -6,6 +6,8 @@ var app = module.exports = express.createServer();
 var five = require("johnny-five");
 var board = new five.Board();
 
+var config = require('./config');
+
 var servos = require("./servos");
 servos.init(board);
 
@@ -24,6 +26,8 @@ var doge = require('./doge');
 
 var coins = require('./coins');
 coins.init(board);
+
+var balance = 0;
 
 // Configuration
 app.configure(function(){
@@ -66,9 +70,14 @@ board.on("ready", function() {
     // Event routing
     handSensor.on('handOver', function() {
         console.log('app.js', 'Event (handSensor): handOver');
-        servos.dispense(function(err) {
+        if (balance >= config.pricePerSheet) {
+            balance -= config.pricePerSheet;
+            servos.dispense(function(err) {});
+        }
+    });
 
-        });
+    coins.on('coin', function(value) {
+        balance += value;
     });
 
     paperLevelSensor.on('paperLow', function() {

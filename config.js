@@ -17,5 +17,6 @@ module.exports = {
         CameraLines: 'tcp://127.0.0.1:4243'
     },
     paperLowDistanceCm: 8,
-    handSensorThreshold: 8
+    handSensorThreshold: 8,
+    pricePerSheet: 5
 };

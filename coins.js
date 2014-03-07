@@ -38,7 +38,7 @@ Coins.prototype.close = function() {
 
 Coins.prototype._onCoin = function(value) {
     var that = this;
-    console.log(value);
+    this.emit('coin', value);
     this.open();
     setTimeout(function() {
         that.close();
