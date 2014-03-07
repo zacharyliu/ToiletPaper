@@ -1,6 +1,7 @@
 var five = require("johnny-five");
 var config = require('./config');
 var async = require('async');
+var zerorpc = require('zerorpc');
 
 var servoDispense, servoCutLeft, servoCutRight;
 
@@ -65,13 +66,19 @@ exports.dispense = function(done) {
     servoDispense.forward();
 
     setTimeout(function() {
-        servoDispense.stop();
-        isDispensing = false;
-
-        exports.cut(function() {
-            done(false);
+        exports.stopAndCut(function() {
+            done();
         });
     }, 2000);
+};
+
+exports.stopAndCut = function(done) {
+    servoDispense.stop();
+    isDispensing = false;
+
+    exports.cut(function() {
+        done(false);
+    });
 };
 
 exports.cut = function(callback) {
@@ -104,7 +111,19 @@ exports.cut = function(callback) {
     ]);
 };
 
+var client;
+
+var _onLine = function(res) {
+
+};
+
 exports.init = function(board) {
+    client = new zerorpc.Client();
+    client.connect(config.zerorpc.CameraLines);
+    client.invoke('subscribe', function(err, res, more) {
+        _onLine(res);
+    });
+
     board.on("ready", function() {
         servoDispense = new ServoDispense(new five.Servo({
             pin: config.pins.servoDispense,
