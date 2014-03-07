@@ -70,10 +70,10 @@ board.on("ready", function() {
     // Event routing
     handSensor.on('handOver', function() {
         console.log('app.js', 'Event (handSensor): handOver');
-        if (balance >= config.pricePerSheet) {
-            balance -= config.pricePerSheet;
+//        if (balance >= config.pricePerSheet) {
+//            balance -= config.pricePerSheet;
             servos.dispense(function(err) {});
-        }
+//        }
     });
 
     coins.on('coin', function(value) {

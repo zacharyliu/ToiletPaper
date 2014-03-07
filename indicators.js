@@ -18,8 +18,15 @@ Indicators.prototype.init = function(board) {
 
         that.doorSensor = new five.Button({
             pin: config.pins.doorSensor,
-            invert: true,
             isPullup: true
+        });
+
+        that.doorSensor.on('up', function() {
+            console.log('doorSensor', 'up');
+        });
+
+        that.doorSensor.on('down', function() {
+            console.log('doorSensor', 'down');
         });
     });
 };
