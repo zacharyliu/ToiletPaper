@@ -8,16 +8,18 @@ var Indicators = function() {};
 util.inherits(Indicators, events.EventEmitter);
 
 Indicators.prototype.init = function(board) {
-    this.led = new five.Led({
-        pin: 13
-    });
+    board.on('ready', function() {
+        this.led = new five.Led({
+            pin: 13
+        });
 
-    this.led.pulse();
+        this.led.pulse();
 
-    this.doorSensor = new five.Button({
-        pin: config.pins.doorSensor,
-        invert: true,
-        isPullup: true
+        this.doorSensor = new five.Button({
+            pin: config.pins.doorSensor,
+            invert: true,
+            isPullup: true
+        });
     });
 };
 
