@@ -27,7 +27,7 @@ var doge = require('./doge');
 var coins = require('./coins');
 coins.init(board);
 
-var balance = 0;
+var balance = 100;
 
 // Configuration
 app.configure(function(){
@@ -70,10 +70,13 @@ board.on("ready", function() {
     // Event routing
     handSensor.on('handOver', function() {
         console.log('app.js', 'Event (handSensor): handOver');
-//        if (balance >= config.pricePerSheet) {
-//            balance -= config.pricePerSheet;
+        if (balance >= config.pricePerSheet) {
+            balance -= config.pricePerSheet;
+            console.log('New balance:', balance);
             servos.dispense(function(err) {});
-//        }
+        } else {
+            console.log("Please insert coin");
+        }
     });
 
     coins.on('coin', function(value) {
@@ -88,5 +91,10 @@ board.on("ready", function() {
                 console.log(err, reply);
             });
 //        }
+    });
+
+    coins.on('coin', function(value) {
+        balance += value;
+        console.log('New balance:', balance);
     })
 });

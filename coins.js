@@ -16,11 +16,12 @@ util.inherits(Coins, events.EventEmitter);
 
 Coins.prototype.init = function(board) {
     var that = this;
+    this.coinProcessed = false;
     this.board = board;
     board.on('ready', function() {
         that.servo = new five.Servo({
             pin: config.pins.servoCoins,
-            range: [100, 170]
+            range: [120, 200]
         });
         that.close();
     });
@@ -30,19 +31,22 @@ Coins.prototype.init = function(board) {
 };
 
 Coins.prototype.open = function() {
-    this.servo.min();
+    if (this.servo) this.servo.min();
 };
 
 Coins.prototype.close = function() {
-    this.servo.max();
+    if (this.servo) this.servo.max();
 };
 
 Coins.prototype._onCoin = function(value) {
     var that = this;
+    if (this.coinProcessed) return;
+    this.coinProcessed = true;
     this.emit('coin', value);
     this.open();
     setTimeout(function() {
         that.close();
+        that.coinProcessed = false;
     }, 1000);
 };
 
