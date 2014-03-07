@@ -12,7 +12,7 @@ PaperLevelSensor.prototype.init = function(board) {
     board.on('ready', function() {
         that.ping = new five.Ping(config.pins.paperLevelSensor);
         that.ping.on('change', function(err, val) {
-            console.log(this.cm);
+//            console.log(this.cm);
             if (this.cm < 1000 && this.cm > config.paperLowDistanceCm) {
                 that.emit("paperLow");
             }
