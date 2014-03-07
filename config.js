@@ -6,7 +6,8 @@ module.exports = {
         servoDispense: 9,
         servoCutLeft: 10,
         servoCutRight: 11,
-        servoCoins: 12
+        servoCoins: 12,
+        doorSensor: 2
     },
     cameras: {
         coin: 2

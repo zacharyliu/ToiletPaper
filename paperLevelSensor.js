@@ -2,6 +2,7 @@ var five = require('johnny-five');
 var util = require('util');
 var events = require('events');
 var config = require('./config');
+var indicators = require('./indicators');
 
 var PaperLevelSensor = function() {};
 
@@ -13,7 +14,7 @@ PaperLevelSensor.prototype.init = function(board) {
         that.ping = new five.Ping(config.pins.paperLevelSensor);
         that.ping.on('change', function(err, val) {
 //            console.log(this.cm);
-            if (this.cm < 1000 && this.cm > config.paperLowDistanceCm) {
+            if (indicators.doorSensor && indicators.doorSensor.isDown && this.cm < 1000 && this.cm > config.paperLowDistanceCm) {
                 that.emit("paperLow");
             }
         });
