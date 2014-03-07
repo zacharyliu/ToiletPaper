@@ -10,14 +10,24 @@ util.inherits(PaperLevelSensor, events.EventEmitter);
 
 PaperLevelSensor.prototype.init = function(board) {
     var that = this;
+    this.paperLow = true;
     board.on('ready', function() {
         that.ping = new five.Ping(config.pins.paperLevelSensor);
-        that.ping.on('change', function(err, val) {
-//            console.log(this.cm);
-            if (indicators.doorSensor && !indicators.doorSensor.isDown && this.cm < 1000 && this.cm > config.paperLowDistanceCm) {
+        that.ping.on('data', function(err, val) {
+//            console.log(that.paperLow, this.cm);
+            if (!that.paperLow && this.cm < 1000 && this.cm > config.paperLowDistanceCm) {
+                that.paperLow = true;
                 that.emit("paperLow");
             }
         });
+    });
+
+    indicators.on('doorClosed', function() {
+        that.paperLow = false;
+    });
+
+    indicators.on('doorOpen', function() {
+        that.paperLow = true;
     });
 };
 

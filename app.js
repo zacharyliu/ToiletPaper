@@ -81,12 +81,12 @@ board.on("ready", function() {
     });
 
     paperLevelSensor.on('paperLow', function() {
-        if (!paperLow) {
-            paperLow = true;
+//        if (!paperLow) {
+//            paperLow = true;
             console.log('Paper Low!');
             twitter.paperLow(function(err, reply) {
                 console.log(err, reply);
             });
-        }
+//        }
     })
 });
