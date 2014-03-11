@@ -22,8 +22,6 @@ handSensor.init(board);
 
 var twitter = require("./twitter");
 
-var doge = require('./doge');
-
 var coins = require('./coins');
 coins.init(board);
 
@@ -77,10 +75,6 @@ board.on("ready", function() {
         } else {
             console.log("Please insert coin");
         }
-    });
-
-    coins.on('coin', function(value) {
-        balance += value;
     });
 
     paperLevelSensor.on('paperLow', function() {
