@@ -18,5 +18,6 @@ module.exports = {
     },
     paperLowDistanceCm: 8,
     handSensorThreshold: 20,
-    pricePerSheet: 10
+    pricePerSheet: 10,
+    dogeCloud: 'http://107.170.74.162:3000'
 };

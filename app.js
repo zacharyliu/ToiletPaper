@@ -25,7 +25,15 @@ var twitter = require("./twitter");
 var coins = require('./coins');
 coins.init(board);
 
-var balance = 100;
+var balance = 0;
+
+function addBalance(amount) {
+    balance += amount;
+    console.log('Adding', amount, 'to balance');
+    console.log('New balance:', balance);
+}
+
+var socket = require('socket.io-client')(config.dogeCloud);
 
 // Configuration
 app.configure(function(){
@@ -88,7 +96,12 @@ board.on("ready", function() {
     });
 
     coins.on('coin', function(value) {
-        balance += value;
-        console.log('New balance:', balance);
-    })
+        addBalance(value);
+    });
+
+    socket.on('updatecredit', function(data) {
+        addBalance(data.delta);
+    });
+
+    addBalance(100);
 });

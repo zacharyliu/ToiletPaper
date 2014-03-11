@@ -6,11 +6,11 @@
     "express": "2.5.8",
     "less": ">= 0.0.1",
     "jade": ">= 0.0.1",
-    "node-dogecoin": "~0.3.5",
     "twit": "~1.1.12",
     "johnny-five": "~0.7.18",
     "temporal": "^0.3.3",
     "async": "^0.2.10",
-    "zerorpc": "^0.9.3"
+    "zerorpc": "^0.9.3",
+    "socket.io-client": "^0.9.16"
   }
 }
