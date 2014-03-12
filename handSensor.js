@@ -39,6 +39,7 @@ HandSensor.prototype.loop = function() {
         },
     ], function(err, results) {
         var diff = results[2] - results[0];
+//        console.log(diff);
         if (diff >= config.handSensorThreshold && !that.handOver) {
             that.handOver = true;
             that.emit('handOver');
@@ -49,7 +50,7 @@ HandSensor.prototype.loop = function() {
     });
     setTimeout(function() {
         that.loop();
-    }, 100);
+    }, 200);
 };
 
 module.exports = new HandSensor();

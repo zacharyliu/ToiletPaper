@@ -59,7 +59,7 @@ var isDispensing = false;
 var isCutting = false;
 
 exports.dispense = function(done) {
-    if (!servoDispense || isDispensing || isCutting) done(true);
+    if (!servoDispense || isDispensing || isCutting) return done(true);
 
     console.log("servos.js", "Dispense");
     isDispensing = true;
@@ -82,7 +82,7 @@ exports.stopAndCut = function(done) {
 };
 
 exports.cut = function(callback) {
-    if (!servoCutLeft || !servoCutRight || isDispensing || isCutting) callback(true);
+    if (!servoCutLeft || !servoCutRight || isDispensing || isCutting) return callback(true);
 
     console.log("servos.js", "Cut");
     isCutting = true;

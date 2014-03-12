@@ -106,7 +106,7 @@ board.on("ready", function() {
     });
 
     coins.on('coin', function(value) {
-        addBalance(value);
+        if (typeof value === 'number') addBalance(value);
     });
 
     socket.on('updatecredit', function(data) {
