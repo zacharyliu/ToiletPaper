@@ -14,7 +14,12 @@ Display.prototype.init = function(board) {
 
 Display.prototype.write = function(number) {
     number = parseInt(number);
-    if (number < 0 || number > 7) return false;
+    if (number < 0) {
+        number = 0;
+    }
+    if (number > 7) {
+        number = 7;
+    }
     this.pinA.write((number & 1));
     this.pinB.write((number & 1<<1)>>1);
     this.pinC.write((number & 1<<2)>>2);

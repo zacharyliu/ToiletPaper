@@ -15,7 +15,7 @@ var indicators = require("./indicators");
 indicators.init(board);
 
 var paperLevelSensor = require("./paperLevelSensor");
-paperLevelSensor.init(board);
+//paperLevelSensor.init(board);
 
 var handSensor = require('./handSensor');
 handSensor.init(board);
@@ -74,6 +74,10 @@ app.get('/api/dispense', function(req, res) {
 });
 
 var paperLow = false;
+
+socket.on('connect', function() {
+    console.log('app.js', 'socket.io connected to ' + config.dogeCloud);
+});
 
 // Initialization
 console.log("app.js", "Connecting to Arduino");

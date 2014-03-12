@@ -20,11 +20,14 @@ ServoDispense.prototype.forward = function() {
                 that.servo.cw(1);
                 setTimeout(done, 100);
             },
-            function(done) {
-                that.servo.stop();
-                setTimeout(done, 200);
-            }
-        ], done);
+//            function(done) {
+//                that.servo.stop();
+//                setTimeout(done, 200);
+//            }
+        ], function() {
+            that.servo.stop();
+            done();
+        });
     }, function() {
         that.stopped = true;
     });
@@ -65,11 +68,11 @@ exports.dispense = function(done) {
     isDispensing = true;
     servoDispense.forward();
 
-//    setTimeout(function() {
-//        exports.stopAndCut(function() {
-//            done();
-//        });
-//    }, 2000);
+    setTimeout(function() {
+        exports.stopAndCut(function() {
+            done();
+        });
+    }, 2000);
 };
 
 exports.stopAndCut = function(done) {
@@ -124,7 +127,7 @@ exports.init = function(board) {
     client = new zerorpc.Client();
     client.connect(config.zerorpc.CameraLines);
     client.invoke('subscribe', function(err, res, more) {
-        _onLine(res);
+//        _onLine(res);
     });
 
     board.on("ready", function() {
