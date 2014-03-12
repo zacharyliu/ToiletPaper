@@ -20,6 +20,9 @@ paperLevelSensor.init(board);
 var handSensor = require('./handSensor');
 handSensor.init(board);
 
+var display = require('./display');
+display.init(board);
+
 var twitter = require("./twitter");
 
 var coins = require('./coins');
@@ -31,9 +34,15 @@ function addBalance(amount) {
     balance += amount;
     console.log('Adding', amount, 'to balance');
     console.log('New balance:', balance);
+    updateDisplay();
 }
 
-var socket = require('socket.io-client')(config.dogeCloud);
+function updateDisplay() {
+    display.write(balance / config.pricePerSheet);
+}
+
+var io = require('socket.io-client');
+var socket = io.connect(config.dogeCloud);
 
 // Configuration
 app.configure(function(){
@@ -78,6 +87,7 @@ board.on("ready", function() {
         console.log('app.js', 'Event (handSensor): handOver');
         if (balance >= config.pricePerSheet) {
             balance -= config.pricePerSheet;
+            updateDisplay();
             console.log('New balance:', balance);
             servos.dispense(function(err) {});
         } else {
@@ -103,5 +113,7 @@ board.on("ready", function() {
         addBalance(data.delta);
     });
 
-    addBalance(100);
+    setTimeout(function() {
+        addBalance(7 * config.pricePerSheet);
+    }, 1000);
 });
