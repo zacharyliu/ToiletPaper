@@ -34,18 +34,28 @@ ServoCut.prototype.down = function() {
 var isDispensing = false;
 var isCutting = false;
 
-exports.dispense = function(done) {
-    if (!servoDispense || isDispensing || isCutting) return done(true);
+exports.dispense = function(callback) {
+    if (!servoDispense || isDispensing || isCutting) return callback(true);
 
     console.log("servos.js", "Dispense");
     isDispensing = true;
-    servoDispense.forward();
 
-    setTimeout(function() {
-        exports.stopAndCut(function() {
-            done();
-        });
-    }, 2000);
+    async.series([
+        function(done) {
+            servoCutLeft.down();
+            servoCutRight.down();
+            setTimeout(done, 300);
+        },
+        function(done) {
+            servoDispense.forward();
+            setTimeout(done, 2000);
+        },
+        function(done) {
+            exports.stopAndCut(done);
+        }
+    ], function() {
+        if (callback) callback();
+    });
 };
 
 exports.stopAndCut = function(done) {
@@ -65,21 +75,21 @@ exports.cut = function(callback) {
 
     async.series([
         function(done) {
-            servoDispense.forward();
+            servoDispense.stop();
             servoCutLeft.up();
             servoCutRight.up();
             setTimeout(done, 300);
         },
-        function(done) {
-            servoDispense.stop();
-            setTimeout(done, 500);
-        },
-        function(done) {
-            servoDispense.reverse();
-            servoCutLeft.down();
-            servoCutRight.down();
-            setTimeout(done, 300);
-        },
+//        function(done) {
+//            servoDispense.stop();
+//            setTimeout(done, 500);
+//        },
+//        function(done) {
+//            servoDispense.reverse();
+//            servoCutLeft.down();
+//            servoCutRight.down();
+//            setTimeout(done, 300);
+//        },
         function(done) {
             servoDispense.stop();
             isCutting = false;
@@ -117,16 +127,16 @@ exports.init = function(board) {
 
         servoCutLeft = new ServoCut(new five.Servo({
             pin: config.pins.servoCutLeft,
-            range: [80,180], // 180
+            range: [95,180], // 180
             isInverted: true
         }));
-        servoCutLeft.down();
+        servoCutLeft.up();
 
         servoCutRight = new ServoCut(new five.Servo({
             pin: config.pins.servoCutRight,
-            range: [50,150] // 50
+            range: [50,135] // 50
         }));
-        servoCutRight.down();
+        servoCutRight.up();
 
         board.repl.inject({
             servoDispense: servoDispense,
