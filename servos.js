@@ -48,7 +48,7 @@ exports.dispense = function(callback) {
         },
         function(done) {
             servoDispense.forward();
-            setTimeout(done, 2000);
+            setTimeout(done, 1700);
         },
         function(done) {
             exports.stopAndCut(done);

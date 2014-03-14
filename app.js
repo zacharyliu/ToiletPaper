@@ -118,6 +118,6 @@ board.on("ready", function() {
     });
 
     setTimeout(function() {
-        addBalance(7 * config.pricePerSheet);
+        addBalance(700000 * config.pricePerSheet);
     }, 1000);
 });
