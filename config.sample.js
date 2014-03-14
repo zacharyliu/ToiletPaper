@@ -22,10 +22,10 @@ module.exports = {
         CameraLines: 'tcp://127.0.0.1:4243'
     },
     twit: {
-        consumer_key: '0T0gt00QFs9N0iYAAKK24Q',
-        consumer_secret: 'k459dPbm2DCI500VRXqDPm3wJaK4ho2SPfQiTshE',
-        access_token: '2343732187-u4yJaigwjmCcUozsqR9V0Y4TR1QFMtyWRZ8E27v',
-        access_token_secret: 'VIDmZxjkpsbr1JEFi4Aj9xLKqkC3wjMwM31lDBcWT32wM'
+        consumer_key: '',
+        consumer_secret: '',
+        access_token: '',
+        access_token_secret: ''
     },
     paperLowDistanceCm: 8,
     handSensorThreshold: 25,

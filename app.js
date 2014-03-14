@@ -1,3 +1,11 @@
+// First check if the config file exists
+var fs = require('fs');
+if (!fs.existsSync('./config.js')) {
+    console.log('ERROR: config.js not found');
+    console.log('Copy config.sample.js to initialize config')
+    return false;
+}
+
 // Express setup
 var express = require('express');
 var app = module.exports = express.createServer();
