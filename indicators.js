@@ -22,10 +22,12 @@ Indicators.prototype.init = function(board) {
         });
 
         that.doorSensor.on('up', function() {
+//            console.log('indicators.js', 'door closed');
             that.emit('doorClosed');
         });
 
         that.doorSensor.on('down', function() {
+//            console.log('indicators.js', 'door open');
             that.emit('doorOpen');
         });
     });

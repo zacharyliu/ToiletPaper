@@ -15,7 +15,7 @@ var indicators = require("./indicators");
 indicators.init(board);
 
 var paperLevelSensor = require("./paperLevelSensor");
-//paperLevelSensor.init(board);
+paperLevelSensor.init(board);
 
 var handSensor = require('./handSensor');
 handSensor.init(board);

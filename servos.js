@@ -17,7 +17,7 @@ ServoDispense.prototype.forward = function() {
     async.whilst(function(){return that.forwards}, function(done) {
         async.series([
             function(done) {
-                that.servo.cw(1);
+                that.servo.cw(0.001);
                 setTimeout(done, 100);
             },
 //            function(done) {
