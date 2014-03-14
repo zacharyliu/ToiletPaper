@@ -7,44 +7,17 @@ var servoDispense, servoCutLeft, servoCutRight;
 
 ServoDispense = function(servo) {
     this.servo = servo;
-    this.forwards = false;
-    this.stopped = true;
 };
 ServoDispense.prototype.forward = function() {
-    var that = this;
-    this.forwards = true;
-    this.stopped = false;
-    async.whilst(function(){return that.forwards}, function(done) {
-        async.series([
-            function(done) {
-                that.servo.cw(0.001);
-                setTimeout(done, 100);
-            },
-//            function(done) {
-//                that.servo.stop();
-//                setTimeout(done, 200);
-//            }
-        ], function() {
-            that.servo.stop();
-            done();
-        });
-    }, function() {
-        that.stopped = true;
-    });
+    this.stop();
+    this.servo.cw(1);
 };
 ServoDispense.prototype.reverse = function() {
-    var that = this;
-    this.stop(function() {
-        that.servo.ccw(1);
-    });
+    this.stop();
+    this.servo.ccw(1);
 };
-ServoDispense.prototype.stop = function(callback) {
-    this.forwards = false;
-    async.until(function(){return this.stopped}, function(done) {
-        setTimeout(done, 100);
-    }, function() {
-        if (callback) callback();
-    });
+ServoDispense.prototype.stop = function() {
+    this.servo.stop();
 };
 
 ServoCut = function(servo, reversed) {
@@ -76,7 +49,7 @@ exports.dispense = function(done) {
 };
 
 exports.stopAndCut = function(done) {
-    servoDispense.stop();
+    if (!servoDispense || !isDispensing) return done(true);
     isDispensing = false;
 
     exports.cut(function() {
@@ -92,21 +65,23 @@ exports.cut = function(callback) {
 
     async.series([
         function(done) {
+            servoDispense.forward();
             servoCutLeft.up();
             servoCutRight.up();
+            setTimeout(done, 300);
+        },
+        function(done) {
+            servoDispense.stop();
             setTimeout(done, 500);
         },
         function(done) {
             servoDispense.reverse();
-            setTimeout(done, 700);
+            servoCutLeft.down();
+            servoCutRight.down();
+            setTimeout(done, 300);
         },
         function(done) {
             servoDispense.stop();
-            done();
-        },
-        function(done) {
-            servoCutLeft.down();
-            servoCutRight.down();
             isCutting = false;
             callback(null);
             done();
@@ -127,7 +102,8 @@ exports.init = function(board) {
     client = new zerorpc.Client();
     client.connect(config.zerorpc.CameraLines);
     client.invoke('subscribe', function(err, res, more) {
-//        _onLine(res);
+        if (err) return;
+        _onLine(res);
     });
 
     board.on("ready", function() {
@@ -135,7 +111,9 @@ exports.init = function(board) {
             pin: config.pins.servoDispense,
             type: "continuous"
         }));
-        servoDispense.stop();
+        setTimeout(function(){
+            servoDispense.stop();
+        }, 1000);
 
         servoCutLeft = new ServoCut(new five.Servo({
             pin: config.pins.servoCutLeft,
