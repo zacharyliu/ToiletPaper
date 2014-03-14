@@ -11,3 +11,9 @@ exports.paperLow = function(callback) {
         callback(err, reply);
     });
 };
+
+exports.onDispense = function(balance, callback) {
+    exports.T.post('statuses/update', {status: 'Sheet dispensed at ' + (new Date()) + '; balance: ' + balance}, function(err, reply) {
+        callback(err, reply);
+    })
+};

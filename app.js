@@ -93,6 +93,9 @@ board.on("ready", function() {
             balance -= config.pricePerSheet;
             updateDisplay();
             console.log('New balance:', balance);
+            twitter.onDispense(balance, function(err, reply) {
+                console.log(err, reply);
+            });
             servos.dispense(function(err) {});
         } else {
             console.log("Please insert coin");
@@ -118,6 +121,6 @@ board.on("ready", function() {
     });
 
     setTimeout(function() {
-        addBalance(700000 * config.pricePerSheet);
+        addBalance(7 * config.pricePerSheet);
     }, 1000);
 });
